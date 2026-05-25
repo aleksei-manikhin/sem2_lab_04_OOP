@@ -1,6 +1,7 @@
 #include "transformMatrixBuilder.h"
 
 #include <cmath>
+#include <stdexcept>
 
 TransformMatrix TransformMatrixBuilder::CreateRotationXMatrix(float angle) {
     TransformMatrix matrix;
@@ -60,6 +61,10 @@ TransformMatrix TransformMatrixBuilder::CreateMoveMatrix(float x, float y, float
 }
 
 TransformMatrix TransformMatrixBuilder::CreateScaleMatrix(float x, float y, float z) {
+    if (x <= 0.0f || y <= 0.0f || z <= 0.0f) {
+        throw std::invalid_argument("Scale coefficients must be positive");
+    }
+
     TransformMatrix matrix;
 
     matrix.SetValue(0, 0, x);

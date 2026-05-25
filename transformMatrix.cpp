@@ -1,5 +1,8 @@
 #include "transformMatrix.h"
 
+#include <cmath>
+#include <stdexcept>
+
 TransformMatrix::TransformMatrix() {
     for (int row = 0; row < MatrixSize; row++) {
         for (int column = 0; column < MatrixSize; column++) {
@@ -40,9 +43,26 @@ Point3D TransformMatrix::TransformPoint(const Point3D& point) const {
 }
 
 float TransformMatrix::GetValue(int row, int column) const {
+    ValidateIndex(row, column);
+
     return matr[row][column];
 }
 
 void TransformMatrix::SetValue(int row, int column, float value) {
+    ValidateIndex(row, column);
+    ValidateValue(value);
+
     matr[row][column] = value;
+}
+
+void TransformMatrix::ValidateIndex(int row, int column) {
+    if (row < 0 || row >= MatrixSize || column < 0 || column >= MatrixSize) {
+        throw std::out_of_range("Transform matrix index is out of range");
+    }
+}
+
+void TransformMatrix::ValidateValue(float value) {
+    if (!std::isfinite(value)) {
+        throw std::invalid_argument("Transform matrix value must be finite");
+    }
 }

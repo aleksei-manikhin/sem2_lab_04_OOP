@@ -10,6 +10,9 @@ public:
 private:
     float matr[MatrixSize][MatrixSize];
 
+    static void ValidateIndex(int row, int column);
+    static void ValidateValue(float value);
+
 public:
     TransformMatrix();
 

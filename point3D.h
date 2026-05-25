@@ -8,7 +8,7 @@ public:
     float Z = 0.0f;
 
     Point3D(float x, float y, float z)
-        : X(x), Y(y), Z(z){}
+        : X(x), Y(y), Z(z) {}
 };
 
 #endif // POINT3D_H
