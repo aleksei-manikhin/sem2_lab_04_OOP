@@ -13,15 +13,18 @@ SOURCES += \
     figure.cpp \
     main.cpp \
     mainwindow.cpp \
+    scene.cpp \
     transformMatrix.cpp \
     transformMatrixBuilder.cpp \
     vertex.cpp
 
 HEADERS += \
+    baseFileReader.h \
     edge.h \
     figure.h \
     normalizationParameters.h \
     point3D.h \
+    scene.h \
     sceneObject.h \
     transformMatrix.h \
     transformMatrixBuilder.h \
