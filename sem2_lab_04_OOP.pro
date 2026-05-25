@@ -12,13 +12,16 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     transformMatrix.cpp \
-    transformMatrixBuilder.cpp
+    transformMatrixBuilder.cpp \
+    vertex.cpp
 
 HEADERS += \
     normalizationParameters.h \
     point3D.h \
+    sceneObject.h \
     transformMatrix.h \
     transformMatrixBuilder.h \
+    vertex.h \
     mainwindow.h
 
 FORMS += \
