@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     edge.cpp \
+    facadeOperationResult.cpp \
     figure.cpp \
     fileReader.cpp \
     main.cpp \
@@ -22,11 +23,13 @@ SOURCES += \
 HEADERS += \
     baseFileReader.h \
     edge.h \
+    facadeOperationResult.h \
     figure.h \
     fileReader.h \
     normalizationParameters.h \
     point3D.h \
     scene.h \
+    sceneDrawerBase.h \
     sceneObject.h \
     transformMatrix.h \
     transformMatrixBuilder.h \
