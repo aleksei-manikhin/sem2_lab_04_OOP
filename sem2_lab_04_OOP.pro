@@ -11,12 +11,14 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    transformMatrix.cpp
+    transformMatrix.cpp \
+    transformMatrixBuilder.cpp
 
 HEADERS += \
     normalizationParameters.h \
     point3D.h \
     transformMatrix.h \
+    transformMatrixBuilder.h \
     mainwindow.h
 
 FORMS += \

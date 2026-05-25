@@ -12,12 +12,12 @@ private:
 
 public:
     TransformMatrix();
-    TransformMatrix(const float matrixValues[MatrixSize][MatrixSize]);
 
     TransformMatrix operator*(const TransformMatrix& matrix) const;
     Point3D TransformPoint(const Point3D& point) const;
 
     float GetValue(int row, int column) const;
+    void SetValue(int row, int column, float value);
 };
 
 #endif // TRANSFORMMATRIX_H

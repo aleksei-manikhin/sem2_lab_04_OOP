@@ -8,26 +8,22 @@ TransformMatrix::TransformMatrix() {
     }
 }
 
-TransformMatrix::TransformMatrix(const float matrixValues[MatrixSize][MatrixSize]) {
-    for (int row = 0; row < MatrixSize; row++) {
-        for (int column = 0; column < MatrixSize; column++) {
-            matr[row][column] = matrixValues[row][column];
-        }
-    }
-}
-
 TransformMatrix TransformMatrix::operator*(const TransformMatrix& matrix) const {
-    float result[MatrixSize][MatrixSize] = {};
+    TransformMatrix result;
 
     for (int row = 0; row < MatrixSize; row++) {
         for (int column = 0; column < MatrixSize; column++) {
+            float value = 0.0f;
+
             for (int index = 0; index < MatrixSize; index++) {
-                result[row][column] += matr[row][index] * matrix.matr[index][column];
+                value += matr[row][index] * matrix.matr[index][column];
             }
+
+            result.SetValue(row, column, value);
         }
     }
 
-    return TransformMatrix(result);
+    return result;
 }
 
 Point3D TransformMatrix::TransformPoint(const Point3D& point) const {
@@ -45,4 +41,8 @@ Point3D TransformMatrix::TransformPoint(const Point3D& point) const {
 
 float TransformMatrix::GetValue(int row, int column) const {
     return matr[row][column];
+}
+
+void TransformMatrix::SetValue(int row, int column, float value) {
+    matr[row][column] = value;
 }
