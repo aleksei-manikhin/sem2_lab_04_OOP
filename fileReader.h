@@ -2,6 +2,7 @@
 #define FILEREADER_H
 
 #include "baseFileReader.h"
+#include "figure.h"
 #include "vertex.h"
 
 #include <string>
@@ -13,6 +14,9 @@ private:
     std::vector<float> ParseLine(const std::string& line) const;
     std::vector<Vertex> CreateVertices(const std::vector<std::vector<float>>& values,
                                        const NormalizationParameters& parameters) const;
+    Figure CreateAxesFigure(float length) const;
+    float GetAxisLength(const std::vector<std::vector<float>>& values,
+                        const NormalizationParameters& parameters) const;
     std::pair<float, float> FindValueRange(const std::vector<std::vector<float>>& values) const;
     float NormalizeValue(float value, float sourceMin, float sourceMax,
                          const NormalizationParameters& parameters) const;

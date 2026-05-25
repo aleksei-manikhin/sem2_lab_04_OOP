@@ -12,6 +12,7 @@ Scene FileReader::ReadScene(const std::string& path, const NormalizationParamete
     std::vector<Vertex> vertices = CreateVertices(values, parameters);
 
     Scene scene;
+    scene.AddFigure(CreateAxesFigure(GetAxisLength(values, parameters)));
     scene.AddFigure(Figure(std::move(vertices), values.size(), values[0].size()));
 
     return scene;
@@ -77,6 +78,27 @@ std::vector<Vertex> FileReader::CreateVertices(const std::vector<std::vector<flo
         }
 
     return vertices;
+}
+
+Figure FileReader::CreateAxesFigure(float length) const {
+    std::vector<Vertex> vertices;
+    vertices.emplace_back(-length, 0.0f, 0.0f);
+    vertices.emplace_back(length, 0.0f, 0.0f);
+    vertices.emplace_back(0.0f, -length, 0.0f);
+    vertices.emplace_back(0.0f, length, 0.0f);
+    vertices.emplace_back(0.0f, 0.0f, -length);
+    vertices.emplace_back(0.0f, 0.0f, length);
+
+    return Figure(std::move(vertices), {{0, 1}, {2, 3}, {4, 5}});
+}
+
+float FileReader::GetAxisLength(const std::vector<std::vector<float>>& values,
+                                const NormalizationParameters& parameters) const {
+    const float xLength = (values[0].size() - 1) * parameters.DxStep;
+    const float yLength = (values.size() - 1) * parameters.DyStep;
+    const float zLength = std::max(std::abs(parameters.Min), std::abs(parameters.Max));
+
+    return std::max({xLength, yLength, zLength}) + 1.0f;
 }
 
 std::pair<float, float> FileReader::FindValueRange(const std::vector<std::vector<float>>& values) const {

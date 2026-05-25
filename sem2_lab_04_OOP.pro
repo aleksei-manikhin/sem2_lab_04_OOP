@@ -15,6 +15,7 @@ SOURCES += \
     fileReader.cpp \
     main.cpp \
     mainwindow.cpp \
+    qtSceneDrawer.cpp \
     scene.cpp \
     transformMatrix.cpp \
     transformMatrixBuilder.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     fileReader.h \
     normalizationParameters.h \
     point3D.h \
+    qtSceneDrawer.h \
     scene.h \
     sceneDrawerBase.h \
     sceneObject.h \
