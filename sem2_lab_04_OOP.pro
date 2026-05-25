@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     edge.cpp \
+    figure.cpp \
     main.cpp \
     mainwindow.cpp \
     transformMatrix.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     edge.h \
+    figure.h \
     normalizationParameters.h \
     point3D.h \
     sceneObject.h \

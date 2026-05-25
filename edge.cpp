@@ -2,8 +2,7 @@
 
 #include <stdexcept>
 
-Edge::Edge(Vertex& begin, Vertex& end)
-    : begin(begin), end(end) {
+Edge::Edge(Vertex& begin, Vertex& end): begin(begin), end(end) {
     if (&begin == &end) {
         throw std::invalid_argument("Edge vertices must be different");
     }
