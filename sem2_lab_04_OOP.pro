@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     edge.cpp \
     figure.cpp \
+    fileReader.cpp \
     main.cpp \
     mainwindow.cpp \
     scene.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     baseFileReader.h \
     edge.h \
     figure.h \
+    fileReader.h \
     normalizationParameters.h \
     point3D.h \
     scene.h \

@@ -5,6 +5,7 @@
 #include "sceneObject.h"
 #include "vertex.h"
 
+#include <cstddef>
 #include <utility>
 #include <vector>
 
@@ -13,14 +14,15 @@ private:
     std::vector<Vertex> vertices;
     std::vector<Edge> edges;
 
-    void CreateEdges(int rowCount, int columnCount);
-    void CreateEdges(const std::vector<std::pair<int, int>>& edgeIndexes);
-    void ValidateGridSize(int rowCount, int columnCount) const;
-    void ValidateEdgeIndex(int index) const;
+    void CreateEdges(std::size_t rowCount, std::size_t columnCount);
+    void CreateEdges(const std::vector<std::pair<std::size_t, std::size_t>>& edgeIndexes);
+    void ValidateGridSize(std::size_t rowCount, std::size_t columnCount) const;
+    void ValidateEdgeIndex(std::size_t index) const;
 
 public:
-    Figure(std::vector<Vertex> vertices, int rowCount, int columnCount);
-    Figure(std::vector<Vertex> vertices, const std::vector<std::pair<int, int>>& edgeIndexes);
+    Figure(std::vector<Vertex> vertices, std::size_t rowCount, std::size_t columnCount);
+    Figure(std::vector<Vertex> vertices,
+           const std::vector<std::pair<std::size_t, std::size_t>>& edgeIndexes);
 
     Figure(const Figure& figure) = delete;
     Figure& operator=(const Figure& figure) = delete;

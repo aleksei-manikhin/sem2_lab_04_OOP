@@ -3,13 +3,14 @@
 #include <stdexcept>
 #include <utility>
 
-Figure::Figure(std::vector<Vertex> vertices, int rowCount, int columnCount)
+Figure::Figure(std::vector<Vertex> vertices, std::size_t rowCount, std::size_t columnCount)
     : vertices(std::move(vertices)) {
     ValidateGridSize(rowCount, columnCount);
     CreateEdges(rowCount, columnCount);
 }
 
-Figure::Figure(std::vector<Vertex> vertices, const std::vector<std::pair<int, int>>& edgeIndexes)
+Figure::Figure(std::vector<Vertex> vertices,
+               const std::vector<std::pair<std::size_t, std::size_t>>& edgeIndexes)
     : vertices(std::move(vertices)) {
     if (this->vertices.empty()) {
         throw std::invalid_argument("Figure must contain at least one vertex");
@@ -32,14 +33,14 @@ void Figure::Transform(const TransformMatrix& matrix) {
     }
 }
 
-void Figure::CreateEdges(int rowCount, int columnCount) {
-    const int horizontalEdgeCount = rowCount * (columnCount - 1);
-    const int verticalEdgeCount = (rowCount - 1) * columnCount;
+void Figure::CreateEdges(std::size_t rowCount, std::size_t columnCount) {
+    const std::size_t horizontalEdgeCount = rowCount * (columnCount - 1);
+    const std::size_t verticalEdgeCount = (rowCount - 1) * columnCount;
     edges.reserve(horizontalEdgeCount + verticalEdgeCount);
 
-    for (int row = 0; row < rowCount; row++) {
-        for (int column = 0; column < columnCount; column++) {
-            const int currentIndex = row * columnCount + column;
+    for (std::size_t row = 0; row < rowCount; row++) {
+        for (std::size_t column = 0; column < columnCount; column++) {
+            const std::size_t currentIndex = row * columnCount + column;
 
             if (column + 1 < columnCount) {
                 edges.emplace_back(vertices[currentIndex], vertices[currentIndex + 1]);
@@ -52,10 +53,10 @@ void Figure::CreateEdges(int rowCount, int columnCount) {
     }
 }
 
-void Figure::CreateEdges(const std::vector<std::pair<int, int>>& edgeIndexes) {
+void Figure::CreateEdges(const std::vector<std::pair<std::size_t, std::size_t>>& edgeIndexes) {
     edges.reserve(edgeIndexes.size());
 
-    for (const std::pair<int, int>& edgeIndex : edgeIndexes) {
+    for (const std::pair<std::size_t, std::size_t>& edgeIndex : edgeIndexes) {
         ValidateEdgeIndex(edgeIndex.first);
         ValidateEdgeIndex(edgeIndex.second);
 
@@ -63,18 +64,18 @@ void Figure::CreateEdges(const std::vector<std::pair<int, int>>& edgeIndexes) {
     }
 }
 
-void Figure::ValidateGridSize(int rowCount, int columnCount) const {
-    if (rowCount <= 0 || columnCount <= 0) {
+void Figure::ValidateGridSize(std::size_t rowCount, std::size_t columnCount) const {
+    if (rowCount == 0 || columnCount == 0) {
         throw std::invalid_argument("Figure grid size must be positive");
     }
 
-    if (vertices.size() != static_cast<std::size_t>(rowCount * columnCount)) {
+    if (vertices.size() != rowCount * columnCount) {
         throw std::invalid_argument("Figure vertex count does not match grid size");
     }
 }
 
-void Figure::ValidateEdgeIndex(int index) const {
-    if (index < 0 || index >= static_cast<int>(vertices.size())) {
+void Figure::ValidateEdgeIndex(std::size_t index) const {
+    if (index >= vertices.size()) {
         throw std::out_of_range("Edge vertex index is out of range");
     }
 }
