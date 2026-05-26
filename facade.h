@@ -23,7 +23,7 @@ public:
     FacadeOperationResult DrawScene();
     FacadeOperationResult LoadScene(const std::string& path, const NormalizationParameters& parameters);
     FacadeOperationResult LoadScene(const std::string& path, float min, float max, float dxStep, float dyStep);
-    FacadeOperationResult MoveScene(float x, float y, float z);
+    FacadeOperationResult MoveScene(float x, float y, float z); //
     FacadeOperationResult RotateScene(float x, float y, float z);
     FacadeOperationResult ScaleScene(float x, float y, float z);
 };
