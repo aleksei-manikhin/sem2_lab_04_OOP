@@ -6,6 +6,7 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QPen>
 #include <QPointF>
 
 class QtSceneDrawer : public SceneDrawerBase {
@@ -16,13 +17,16 @@ private:
     QGraphicsScene graphicsScene;
 
     QPointF ProjectPoint(const Point3D& point) const;
-    void DrawFigure(const Figure& figure);
+    QPen CreatePen(const QColor& color, double width) const;
+    void DrawAxes(const Figure& axes);
+    void DrawAxis(const Edge& axis, const QPen& pen, const QString& label);
+    void DrawFigure(const Figure& figure, const QPen& pen);
     void DrawEdge(const Edge& edge, const QPen& pen);
 
 public:
     explicit QtSceneDrawer(QGraphicsView& graphicsView);
 
-    void DrawScene(const Scene& scene) override;
+    void DrawScene(const Scene& scene, bool fitScene) override;
 };
 
 #endif // QTSCENEDRAWER_H

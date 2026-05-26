@@ -7,7 +7,7 @@ class SceneDrawerBase {
 public:
     virtual ~SceneDrawerBase() = default;
 
-    virtual void DrawScene(const Scene& scene) = 0;
+    virtual void DrawScene(const Scene& scene, bool fitScene) = 0;
 };
 
 #endif // SCENEDRAWERBASE_H

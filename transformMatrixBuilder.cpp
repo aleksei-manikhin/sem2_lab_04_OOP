@@ -3,10 +3,16 @@
 #include <cmath>
 #include <stdexcept>
 
+float ToRadians(float angle) {
+    constexpr float Pi = 3.14159265358979323846f;
+    return angle * Pi / 180.0f;
+}
+
 TransformMatrix TransformMatrixBuilder::CreateRotationXMatrix(float angle) {
     TransformMatrix matrix;
-    const float sinValue = std::sin(angle);
-    const float cosValue = std::cos(angle);
+    const float radians = ToRadians(angle);
+    const float sinValue = std::sin(radians);
+    const float cosValue = std::cos(radians);
 
     matrix.SetValue(1, 1, cosValue);
     matrix.SetValue(1, 2, -sinValue);
@@ -18,8 +24,9 @@ TransformMatrix TransformMatrixBuilder::CreateRotationXMatrix(float angle) {
 
 TransformMatrix TransformMatrixBuilder::CreateRotationYMatrix(float angle) {
     TransformMatrix matrix;
-    const float sinValue = std::sin(angle);
-    const float cosValue = std::cos(angle);
+    const float radians = ToRadians(angle);
+    const float sinValue = std::sin(radians);
+    const float cosValue = std::cos(radians);
 
     matrix.SetValue(0, 0, cosValue);
     matrix.SetValue(0, 2, sinValue);
@@ -31,8 +38,9 @@ TransformMatrix TransformMatrixBuilder::CreateRotationYMatrix(float angle) {
 
 TransformMatrix TransformMatrixBuilder::CreateRotationZMatrix(float angle) {
     TransformMatrix matrix;
-    const float sinValue = std::sin(angle);
-    const float cosValue = std::cos(angle);
+    const float radians = ToRadians(angle);
+    const float sinValue = std::sin(radians);
+    const float cosValue = std::cos(radians);
 
     matrix.SetValue(0, 0, cosValue);
     matrix.SetValue(0, 1, -sinValue);

@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     edge.cpp \
+    facade.cpp \
     facadeOperationResult.cpp \
     figure.cpp \
     fileReader.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 HEADERS += \
     baseFileReader.h \
     edge.h \
+    facade.h \
     facadeOperationResult.h \
     figure.h \
     fileReader.h \
