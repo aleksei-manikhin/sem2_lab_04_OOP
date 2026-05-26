@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("CSV Surface Viewer");
+    setWindowIcon(ui->icon_2->icon());
 
     SetupFacade();
     SetupConnections();
