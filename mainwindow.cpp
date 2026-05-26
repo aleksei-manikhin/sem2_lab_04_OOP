@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     SetupFacade();
     SetupConnections();
+    setupDragAndDrop();
 
     ui->contentStackedWidget->setCurrentWidget(ui->emptyPage);
     ui->statusbar->showMessage(tr("Выберите CSV-файл"));
@@ -52,25 +53,20 @@ void MainWindow::SetupConnections() {
 }
 
 void MainWindow::OnChooseFileClicked() {
-    QDir filesDirectory(QCoreApplication::applicationDirPath());
-    filesDirectory.cd("../../..");
-    filesDirectory.cd("files_for_selecting");
+    QString projectFilesPath = QCoreApplication::applicationDirPath()
+                               + "/../../../files_for_selecting";
 
     const QString filePath = QFileDialog::getOpenFileName(
         this,
         tr("Выберите CSV-файл"),
-        filesDirectory.absolutePath(),
+        projectFilesPath,
         tr("CSV files (*.csv);;All files (*.*)"));
 
     if (filePath.isEmpty()) {
         return;
     }
 
-    currentFilePath = filePath;
-
-    if (UpdateScene()) {
-        ui->filePathLineEdit->setText(filePath);
-    }
+    selectFile(filePath);
 }
 
 void MainWindow::OnResetButtonClicked() {
@@ -99,6 +95,19 @@ void MainWindow::OnParametersChanged() {
     if (!isChangingValues) {
         UpdateScene();
     }
+}
+
+void MainWindow::selectFile(const QString& filePath) {
+    if (!filePath.isEmpty()) {
+        currentFilePath = filePath;
+
+        if (UpdateScene())
+            ui->filePathLineEdit->setText(filePath);
+    }
+}
+
+int MainWindow::hasLoadedData() const {
+    return !currentFilePath.isEmpty();
 }
 
 bool MainWindow::UpdateScene() {

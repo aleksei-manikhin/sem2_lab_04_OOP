@@ -136,6 +136,11 @@ QWidget#emptyPage {
     border: 1px solid #dbe3ef;
     border-radius: 16px;
 }
+QWidget#emptyPage[dropActive="true"] {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                stop:0 #e5fbff, stop:1 #eef8ff);
+    border: 1px solid #dbe3ef;
+}
 QLabel#emptyPageText {
     color: #2f3d50;
     padding: 8px 24px;
