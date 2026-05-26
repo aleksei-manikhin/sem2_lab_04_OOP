@@ -19,6 +19,7 @@ SOURCES += \
     mainwindow.cpp \
     qtSceneDrawer.cpp \
     scene.cpp \
+    touchpad.cpp \
     transformMatrix.cpp \
     transformMatrixBuilder.cpp \
     vertex.cpp

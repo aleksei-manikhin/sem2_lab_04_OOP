@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     SetupFacade();
     SetupConnections();
     setupDragAndDrop();
+    setupTouchpad();
 
     ui->contentStackedWidget->setCurrentWidget(ui->emptyPage);
     ui->statusbar->showMessage(tr("Выберите CSV-файл"));

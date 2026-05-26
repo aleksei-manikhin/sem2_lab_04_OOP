@@ -19,6 +19,10 @@ QT_END_NAMESPACE
 class QDropEvent;
 class QEvent;
 class QMimeData;
+class QDoubleSpinBox;
+class QNativeGestureEvent;
+class QPoint;
+class QWheelEvent;
 
 class MainWindow : public QMainWindow
 {
@@ -38,17 +42,30 @@ private:
     std::unique_ptr<Facade> facade;
     QString currentFilePath;
     bool isChangingValues = false;
+    bool isZPressed = false;
 
     void SetupFacade();
     void SetupConnections();
     void setupDragAndDrop();
+    void setupTouchpad();
     void OnChooseFileClicked();
     void OnResetButtonClicked();
     void OnParametersChanged();
     void selectFile(const QString& filePath);
     int isDropWidget(const QObject* watched) const;
+    int isTouchpadWidget(const QObject* watched) const;
     int handleDragDropEvent(const QObject* watched, QEvent* event);
+    int handleTouchpadEvent(const QObject* watched, QEvent* event);
+    void updateZKeyState(QEvent* event);
+    int handleTouchpadWheel(QWheelEvent* wheelEvent);
+    int handleTouchpadNativeGesture(QNativeGestureEvent* gestureEvent);
+    void zoomTouchpadScene(double scaleFactor);
+    void moveTouchpadScene(const QPoint& delta, int isPixelDelta);
+    void moveTouchpadSceneByXY(const QPoint& delta, int isPixelDelta);
+    void moveTouchpadSceneByZ(const QPoint& delta, int isPixelDelta);
+    void applyTouchpadMove(double dx, double dy, double dz);
     int acceptDropEvent(QDropEvent* dropEvent, int shouldSelectFile);
+    void setSpinBoxValueWithoutUpdate(QDoubleSpinBox* spinBox, double value);
     void setDropHintVisible(int isVisible);
     QString droppedFilePath(const QMimeData* mimeData) const;
     int hasLoadedData() const;

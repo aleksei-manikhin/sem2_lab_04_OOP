@@ -13,7 +13,9 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event) {
     int isHandled = 0;
 
     if (event != nullptr) {
-        if (isDropWidget(watched) || watched == ui->centralwidget)
+        isHandled = handleTouchpadEvent(watched, event);
+
+        if (!isHandled && (isDropWidget(watched) || watched == ui->centralwidget))
             isHandled = handleDragDropEvent(watched, event);
     }
 
