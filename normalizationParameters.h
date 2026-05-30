@@ -26,6 +26,20 @@ public:
             throw std::invalid_argument("Normalization steps must be positive");
         }
     }
+
+    float GetMin() const {
+        return Min;
+    }
+    float GetMax() const {
+        return Max;
+    }
+    float GetDxStep() const {
+        return DxStep;
+    }
+    float GetDyStep() const {
+        return DyStep;
+    }
+
 };
 
 #endif // NORMALIZATIONPARAMETERS_H

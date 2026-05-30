@@ -35,8 +35,8 @@ void QtSceneDrawer::DrawScene(const Scene& scene, bool fitScene) {
 }
 
 QPointF QtSceneDrawer::ProjectPoint(const Point3D& point) const {
-    const double screenX = (point.X - point.Y) * Scale;
-    const double screenY = ((point.X + point.Y) * 0.5 - point.Z) * Scale;
+    const double screenX = (point.GetX() - point.GetY()) * Scale;
+    const double screenY = ((point.GetX() + point.GetY()) * 0.5 - point.GetZ()) * Scale;
 
     return QPointF(screenX, screenY);
 }

@@ -10,34 +10,58 @@
 #include <QtGlobal>
 #include <QWheelEvent>
 
-static constexpr double TouchpadMoveByPixel = 0.12;
-static constexpr double TouchpadMoveByAngle = 1.6 / 120.0;
-static constexpr double WheelZoomByPixel = 1.0 / 500.0;
-static constexpr double WheelZoomByAngle = 1.0 / 900.0;
+class TouchpadHelper {
+public:
+    static constexpr double DefaultScaleFactor = 1.0;
+    static constexpr double MoveMinValue = -9999.0;
+    static constexpr double MoveMaxValue = 9999.0;
+    static constexpr double RotationMinValue = -360.0;
+    static constexpr double RotationMaxValue = 360.0;
+    static constexpr int ScaleDecimals = 4;
+    static constexpr double ScaleSingleStep = 0.001;
 
-static double deltaToSceneMove(int delta, int isPixelDelta) {
-    return delta * (isPixelDelta ? TouchpadMoveByPixel : TouchpadMoveByAngle);
-}
-
-static double deltaToZoomFactor(int delta, int isPixelDelta) {
-    return qBound(0.75, 1.0 + delta * (isPixelDelta ? WheelZoomByPixel : WheelZoomByAngle), 1.35);
-}
-
-static QPoint touchpadDelta(QWheelEvent* wheelEvent, int& isPixelDelta) {
-    QPoint delta = wheelEvent->pixelDelta();
-    isPixelDelta = 1;
-
-    if (delta.isNull()) {
-        delta = wheelEvent->angleDelta();
-        isPixelDelta = 0;
+    static double DeltaToSceneMove(int delta, int isPixelDelta) {
+        return delta * (isPixelDelta ? MoveByPixel : MoveByAngle);
     }
 
-    return delta;
-}
+    static double DeltaToZoomFactor(int delta, int isPixelDelta) {
+        return qBound(WheelZoomMinFactor,
+                      DefaultScaleFactor + delta * (isPixelDelta ? WheelZoomByPixel : WheelZoomByAngle),
+                      WheelZoomMaxFactor);
+    }
 
-static int zScrollDelta(const QPoint& delta) {
-    return delta.y() != 0 ? delta.y() : delta.x();
-}
+    static double NativeZoomFactor(double scaleDelta) {
+        return qBound(NativeZoomMinFactor,
+                      DefaultScaleFactor + scaleDelta,
+                      NativeZoomMaxFactor);
+    }
+
+    static QPoint TouchpadDelta(QWheelEvent* wheelEvent, int& isPixelDelta) {
+        QPoint delta = wheelEvent->pixelDelta();
+        isPixelDelta = 1;
+
+        if (delta.isNull()) {
+            delta = wheelEvent->angleDelta();
+            isPixelDelta = 0;
+        }
+
+        return delta;
+    }
+
+    static int ZScrollDelta(const QPoint& delta) {
+        return delta.y() != 0 ? delta.y() : delta.x();
+    }
+
+private:
+    static constexpr double MoveByPixel = 0.12;
+    static constexpr double MoveByAngle = 1.6 / 120.0;
+    static constexpr double WheelZoomByPixel = 1.0 / 500.0;
+    static constexpr double WheelZoomByAngle = 1.0 / 900.0;
+    static constexpr double WheelZoomMinFactor = 0.75;
+    static constexpr double WheelZoomMaxFactor = 1.35;
+    static constexpr double NativeZoomMinFactor = 0.2;
+    static constexpr double NativeZoomMaxFactor = 5.0;
+};
 
 void MainWindow::setSpinBoxValueWithoutUpdate(QDoubleSpinBox* spinBox, double value) {
     isChangingValues = true;
@@ -80,13 +104,13 @@ void MainWindow::updateZKeyState(QEvent* event) {
 
 int MainWindow::handleTouchpadWheel(QWheelEvent* wheelEvent) {
     int isPixelDelta = 1;
-    const QPoint delta = touchpadDelta(wheelEvent, isPixelDelta);
+    const QPoint delta = TouchpadHelper::TouchpadDelta(wheelEvent, isPixelDelta);
 
     if (delta.isNull())
         return 0;
 
     if (wheelEvent->modifiers() & Qt::ControlModifier)
-        zoomTouchpadScene(deltaToZoomFactor(delta.y(), isPixelDelta));
+        zoomTouchpadScene(TouchpadHelper::DeltaToZoomFactor(delta.y(), isPixelDelta));
     else
         moveTouchpadScene(delta, isPixelDelta);
 
@@ -102,18 +126,26 @@ int MainWindow::handleTouchpadNativeGesture(QNativeGestureEvent* gestureEvent) {
     if (qFuzzyIsNull(scaleDelta))
         return 0;
 
-    zoomTouchpadScene(qBound(0.2, 1.0 + scaleDelta, 5.0));
+    zoomTouchpadScene(TouchpadHelper::NativeZoomFactor(scaleDelta));
     gestureEvent->accept();
 
     return 1;
 }
 
 void MainWindow::zoomTouchpadScene(double scaleFactor) {
-    if (qFuzzyCompare(scaleFactor, 1.0))
+    if (qFuzzyCompare(scaleFactor, TouchpadHelper::DefaultScaleFactor))
         return;
 
-    setSpinBoxValueWithoutUpdate(ui->doubleSpinBox_14,
-                                 ui->doubleSpinBox_14->value() * scaleFactor);
+    const double oldScale = ui->doubleSpinBox_14->value();
+
+    setSpinBoxValueWithoutUpdate(ui->doubleSpinBox_14, oldScale * scaleFactor);
+
+    if (scaleFactor > TouchpadHelper::DefaultScaleFactor
+        && qFuzzyCompare(ui->doubleSpinBox_14->value(), oldScale)) {
+        setSpinBoxValueWithoutUpdate(ui->doubleSpinBox_14,
+                                     oldScale + ui->doubleSpinBox_14->singleStep());
+    }
+
     UpdateScene();
 }
 
@@ -127,8 +159,8 @@ void MainWindow::moveTouchpadScene(const QPoint& delta, int isPixelDelta) {
 void MainWindow::moveTouchpadSceneByXY(const QPoint& delta, int isPixelDelta) {
     const double oldX = ui->doubleSpinBox_5->value();
     const double oldY = ui->doubleSpinBox_6->value();
-    const double dx = deltaToSceneMove(delta.x(), isPixelDelta);
-    const double dy = deltaToSceneMove(delta.y(), isPixelDelta);
+    const double dx = TouchpadHelper::DeltaToSceneMove(delta.x(), isPixelDelta);
+    const double dy = TouchpadHelper::DeltaToSceneMove(delta.y(), isPixelDelta);
 
     setSpinBoxValueWithoutUpdate(ui->doubleSpinBox_5, oldX + dx);
     setSpinBoxValueWithoutUpdate(ui->doubleSpinBox_6, oldY + dy);
@@ -139,7 +171,7 @@ void MainWindow::moveTouchpadSceneByXY(const QPoint& delta, int isPixelDelta) {
 
 void MainWindow::moveTouchpadSceneByZ(const QPoint& delta, int isPixelDelta) {
     const double oldZ = ui->doubleSpinBox_7->value();
-    const double dz = deltaToSceneMove(zScrollDelta(delta), isPixelDelta);
+    const double dz = TouchpadHelper::DeltaToSceneMove(TouchpadHelper::ZScrollDelta(delta), isPixelDelta);
 
     setSpinBoxValueWithoutUpdate(ui->doubleSpinBox_7, oldZ + dz);
     applyTouchpadMove(0.0, 0.0, ui->doubleSpinBox_7->value() - oldZ);
@@ -159,9 +191,14 @@ void MainWindow::setupTouchpad() {
     ui->graphicsView->viewport()->setFocusPolicy(Qt::StrongFocus);
     ui->graphicsView->viewport()->unsetCursor();
 
-    ui->doubleSpinBox_5->setRange(-9999.0, 9999.0);
-    ui->doubleSpinBox_6->setRange(-9999.0, 9999.0);
-    ui->doubleSpinBox_7->setRange(-9999.0, 9999.0);
+    ui->doubleSpinBox_5->setRange(TouchpadHelper::MoveMinValue, TouchpadHelper::MoveMaxValue);
+    ui->doubleSpinBox_6->setRange(TouchpadHelper::MoveMinValue, TouchpadHelper::MoveMaxValue);
+    ui->doubleSpinBox_7->setRange(TouchpadHelper::MoveMinValue, TouchpadHelper::MoveMaxValue);
+    ui->doubleSpinBox_8->setRange(TouchpadHelper::RotationMinValue, TouchpadHelper::RotationMaxValue);
+    ui->doubleSpinBox_9->setRange(TouchpadHelper::RotationMinValue, TouchpadHelper::RotationMaxValue);
+    ui->doubleSpinBox_10->setRange(TouchpadHelper::RotationMinValue, TouchpadHelper::RotationMaxValue);
+    ui->doubleSpinBox_14->setDecimals(TouchpadHelper::ScaleDecimals);
+    ui->doubleSpinBox_14->setSingleStep(TouchpadHelper::ScaleSingleStep);
 
     if (QCoreApplication::instance() != nullptr)
         QCoreApplication::instance()->installEventFilter(this);

@@ -30,7 +30,7 @@ TransformMatrix TransformMatrix::operator*(const TransformMatrix& matrix) const 
 }
 
 Point3D TransformMatrix::TransformPoint(const Point3D& point) const {
-    float source[MatrixSize] = {point.X, point.Y, point.Z, 1.0f};
+    float source[MatrixSize] = {point.GetX(), point.GetY(), point.GetZ(), 1.0f};
     float result[MatrixSize] = {};
 
     for (int row = 0; row < MatrixSize; row++) {
